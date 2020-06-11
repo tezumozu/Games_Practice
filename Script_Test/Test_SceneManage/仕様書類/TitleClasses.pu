@@ -1,0 +1,9 @@
+@startuml タイトル画面のクラス図
+class Button{
+
+}
+class RankingManager{
+
+}
+
+@enduml

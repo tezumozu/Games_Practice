@@ -1,0 +1,22 @@
+@startuml GameSceneクラス図
+
+class TimerManager{
+
+}
+
+class PhaseManager{
+
+}
+
+class InputManager{
+
+}
+
+class ScoreManager{
+
+}
+
+class RankingManager{
+
+}
+@enduml
