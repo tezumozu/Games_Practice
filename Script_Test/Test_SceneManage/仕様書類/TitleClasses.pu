@@ -1,9 +1,55 @@
 @startuml タイトル画面のクラス図
-class Button{
 
-}
-class RankingManager{
+package Buttons{
+    abstract class Button{
 
+    }
+
+    class GameStartButton{
+
+    }
+
+    class RankingButton{
+
+    }
+
+    GameStartButton --|> Button
+    RankingButton --|> Button
 }
+
+package Presenters{
+    class RankingPresenter{
+    }
+
+    RankingPresenter --> RankingButton : Obsever
+    RankingPresenter <--> Rankings.RankingManager : Obsever
+    RankingPresenter <-- Rankings.RankingView:Obsever
+}
+
+package Managers{
+    class InputManager{
+        
+    }
+}
+
+package Rankings{
+    class RankingManager{
+        -RankingData data
+        +getRanking()
+        -wrightRanking()
+        +updateRanking(int)
+    }
+
+    class RankingData<<stract>>{
+        +int rank1
+        +int rank2
+        +int rank3
+    } 
+
+    class RankingView{
+    }
+    RankingData --> RankingManager
+}
+
 
 @enduml

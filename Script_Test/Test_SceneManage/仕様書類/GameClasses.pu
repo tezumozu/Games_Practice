@@ -1,22 +1,42 @@
 @startuml GameSceneクラス図
 
-class TimerManager{
+package Managers{
+    class PhaseManager{
 
+    }
+
+    class InputManager{
+
+    }
+
+    class RankingManager{
+
+    }
 }
 
-class PhaseManager{
+package Scores{
+    class ScoreData<<stract>>{
+        +int count
+    }
 
+    class ScoreCounter{
+
+    }
 }
 
-class InputManager{
+package Timers{
+    class TimerManager{
 
+    }
 }
 
-class ScoreManager{
+package Inputs{
+    class gameInputsEventProvider{
 
+    }
+
+    interface IInputEventProvider{
+    }
 }
 
-class RankingManager{
-
-}
 @enduml
