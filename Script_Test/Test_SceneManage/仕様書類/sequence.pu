@@ -1,0 +1,40 @@
+@startuml GameScene
+    participant PhaseManager
+    participant Initariser
+    participant ScoreCounter
+    participant TimerPresenter
+    participant Timer
+
+    group initarise 
+        Initariser -> Initariser:init() 各種マネージャ・　プレゼンタの初期化
+        group initarise
+            Initariser -> ScoreCounter:OnNext()
+            ScoreCounter -> ScoreCounter:init()
+
+            Initariser -> TimerPresenter:OnNext()
+            TimerPresenter -> TimerPresenter:init()
+
+            Initariser -> Timer:OnNext()
+            Timer -> Timer:init()
+        end
+        Initariser -> PhaseManager : Start()
+        PhaseManager -> PhaseManager : ChangePhase() REDY
+    end
+
+    group Phase:REDY
+        PhaseManager -> TimerPresenter:OnNext()
+        group CountDown
+            TimerPresenter -> Timer:表示しているTimerに3秒でTimerスタート
+            group Timerloop
+                Timer -> Timer:毎秒表示を変更
+                else time == 0
+                Timer -> Timer : Timerを非表示にする
+                Timer -> TimerPresenter:タイマーの終了を通知
+            end
+            TimerPresenter -> PhaseManager:"カウントダウンの終了を通知"
+        end
+        PhaseManager -> PhaseManager:PhaseをGAMEに変更
+    end
+
+
+@enduml

@@ -1,42 +1,96 @@
 @startuml GameSceneクラス図
 
-package Managers{
+namespace Managers{
+    enum Phase{
+        REDY,
+        GAME,
+        RESULT,
+        END
+    }
+
     class PhaseManager{
-
+        +getPhase()
     }
 
-    class InputManager{
-
+    class Initarizer{
+        +init()
     }
 
-    class RankingManager{
-
-    }
+    Phase --o PhaseManager
+    Initarizer --> PhaseManager
 }
 
-package Scores{
+
+namespace Scores{
     class ScoreData<<stract>>{
         +int count
     }
 
-    class ScoreCounter{
-
+    class ScoreCounter<<singleton>>{
+        +setInput(IInputEventProvider)
     }
+
+    ScoreCounter --> Inputs.IInputEventProvider:obsever
+    ScoreData -left-o ScoreCounter
+
+    ScoreCounter --> Rankings.RankingManager
+    ScoreCounter -left-> Managers.PhaseManager
 }
 
-package Timers{
-    class TimerManager{
+
+namespace Timers{
+    class TimerPresenter{
 
     }
+
+    class TimerView<<singleton>>{
+
+    }
+    class CountDownView<<singleton>>{
+
+    }
+
+    class Timer<<abstract>>{
+        +stertTimer
+        +endTimer
+    }
+
+    TimerView --|> Timer
+    CountDownView --|> Timer
+
+    TimerPresenter <-right-> Managers.PhaseManager:Obsever
+    TimerPresenter o-right-> Timer:Obsever
+
 }
 
-package Inputs{
-    class gameInputsEventProvider{
+
+namespace Inputs{
+    class GameInputsEventProvider<<SingletonMono>>{
 
     }
 
     interface IInputEventProvider{
     }
+
+    GameInputsEventProvider .right.|> IInputEventProvider
+}
+
+
+namespace Rankings{
+    class RankingManager <<singleton>>{
+        -RankingData data
+        +getRanking()
+        -wrightRanking()
+        +updateRanking(int)
+    }
+
+    class RankingData<<stract>>{
+        +int rank1
+        +int rank2
+        +int rank3
+    }
+
+    RankingManager o-- RankingData 
 }
 
 @enduml
