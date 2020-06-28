@@ -22,14 +22,8 @@ package Presenters{
     }
 
     RankingPresenter --> RankingButton : Obsever
-    RankingPresenter <--> Rankings.RankingManager : Obsever
+    RankingPresenter <-up-> Rankings.RankingManager : Obsever
     RankingPresenter <-- Rankings.RankingView:Obsever
-}
-
-package Managers{
-    class InputManager{
-        
-    }
 }
 
 package Rankings{

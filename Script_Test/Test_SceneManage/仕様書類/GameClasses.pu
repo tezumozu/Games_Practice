@@ -22,19 +22,15 @@ namespace Managers{
 
 
 namespace Scores{
-    class ScoreData<<stract>>{
-        +int count
-    }
 
-    class ScoreCounter<<singleton>>{
+    class ScoreManager<<singleton>>{
         +setInput(IInputEventProvider)
     }
 
-    ScoreCounter --> Inputs.IInputEventProvider:obsever
-    ScoreData -left-o ScoreCounter
+    ScoreManager --> Inputs.IInputEventProvider:obsever
 
-    ScoreCounter --> Rankings.RankingManager
-    ScoreCounter -left-> Managers.PhaseManager
+    ScoreManager --> Rankings.RankingManager
+    ScoreManager -up-> Managers.PhaseManager
 }
 
 
@@ -59,7 +55,7 @@ namespace Timers{
     CountDownView --|> Timer
 
     TimerPresenter <-right-> Managers.PhaseManager:Obsever
-    TimerPresenter o-right-> Timer:Obsever
+    TimerPresenter o-left-> Timer:Obsever
 
 }
 
@@ -91,6 +87,14 @@ namespace Rankings{
     }
 
     RankingManager o-- RankingData 
+}
+
+namespace ResultViews{
+    Class ResultPresenter{
+
+    }    
+
+    ResultPresenter -up-> Timers.TimerPresenter:Obsever
 }
 
 @enduml

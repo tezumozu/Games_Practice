@@ -4,6 +4,9 @@
     participant ScoreCounter
     participant TimerPresenter
     participant Timer
+    participant InputEventProvider
+    participant ResultPresenter
+    participant ResultView
 
     group initarise 
         Initariser -> Initariser:init() 各種マネージャ・　プレゼンタの初期化
@@ -22,7 +25,7 @@
     end
 
     group Phase:REDY
-        PhaseManager -> TimerPresenter:OnNext()
+        PhaseManager -> TimerPresenter:OnNext():表示の切り替え
         group CountDown
             TimerPresenter -> Timer:表示しているTimerに3秒でTimerスタート
             group Timerloop
@@ -35,6 +38,57 @@
         end
         PhaseManager -> PhaseManager:PhaseをGAMEに変更
     end
+
+    group Phase:GAME
+        PhaseManager -> TimerPresenter:OnNext():表示の切り替え
+        group CountDown
+            TimerPresenter -> Timer:表示しているTimerに10秒でTimerスタート
+            group Timerloop
+                Timer -> Timer:毎秒表示を変更
+
+                else クリックされたら
+                InputEventProvider -> ScoreCounter:OnNext()
+                ScoreCounter -> ScoreCounter:クリック回数を1増加
+
+                else time == 0
+                Timer -> Timer : Timerを非表示にする
+                Timer -> TimerPresenter:タイマーの終了を通知
+            end
+            TimerPresenter -> PhaseManager:"カウントダウンの終了を通知"
+        end
+        PhaseManager -> PhaseManager :PhaseをRESULTに変更
+    end
+
+    group Phase:RESULT
+        PhaseManager -> TimerPresenter:OnNext()
+        group CountDown
+            TimerPresenter -> Timer:表示しているTimerに1秒でTimerスタート
+            group Timerloop
+                Timer -> Timer:Finish!の文字を表示
+
+                else time == 0
+                Timer -> Timer : Timerを非表示にする
+                Timer -> TimerPresenter:タイマーの終了を通知
+            end
+            TimerPresenter -> RankingManager:OnNext()
+        end
+        ResultPresenter -> ResultView:結果の表示
+
+        else 終了ボタンをおす
+        ResultView -> ResultPresenter:OnNext()
+        ResultPresenter -> ScoreCounter:記録を依頼
+        ScoreCounter -> RankingManager:upDateRanking()
+        RankingManager -> RankingManager:ランキングの更新
+        ScoreCounter -> PhaseManager : 終了通知
+        PhaseManager -> PhaseManager : PhaseをENDに変更
+    end
+
+    group Phase:END
+        PhaseManager -> Initariser:OnNext
+        Initariser -> Initariser : 各マネージャのSubject停止
+        Initariser -> Initariser : Sceneの切り替え
+    end
+
 
 
 @enduml
